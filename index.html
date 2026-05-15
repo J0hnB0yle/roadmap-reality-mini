@@ -64,16 +64,51 @@
     vertical-align: 2px;
   }
 
-  .honesty-note {
-    background: #fff8f1;
-    border-left: 4px solid #c75b00;
-    padding: 12px 16px;
-    font-size: 14.5px;
-    color: #7a4a00;
-    border-radius: 4px;
-    margin-bottom: 16px;
+  .workflow-stack {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 18px;
   }
-  .honesty-note b { color: #5a2f00; }
+  @media (max-width: 760px) { .workflow-stack { grid-template-columns: 1fr; } }
+  .ws-col {
+    background: #fafbfc;
+    border-left: 4px solid #2d4373;
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px;
+  }
+  .ws-col h3 {
+    margin: 0 0 8px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #1a2b4d;
+    font-weight: 700;
+  }
+  .ws-col ol, .ws-col ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13.5px;
+    color: #1a2b4d;
+    line-height: 1.6;
+  }
+  .ws-col li { margin-bottom: 3px; }
+  .ws-col li b { color: #1a2b4d; }
+  .ws-col code {
+    background: #eef0f3;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 12.5px;
+    font-family: "SF Mono", Menlo, Monaco, monospace;
+  }
+  .ws-col .prod {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed #d0d4d9;
+    font-size: 12.5px;
+    color: #5a6573;
+  }
+  .ws-col .prod b { color: #2d4373; }
 
   /* Inputs */
   .inputs { display: grid; grid-template-columns: 1.35fr 1fr 0.85fr; gap: 12px; }
@@ -366,8 +401,31 @@
   <span class="scope">Mock data &middot; vanilla JS &middot; no build step &middot; same logic as <code>run.py</code></span>
 </header>
 
-<div class="honesty-note">
-  <b>Honest framing.</b> Mock data, three CSVs in JavaScript variables, not wired to Jira / Gong / Salesforce. The point is the <b>signal &rarr; triage &rarr; route</b> shape. Editable inputs &mdash; change a backlog tag, edit a call-note commitment, re-run, see the digest shift. <b>Production</b> is the same shape with live API connectors plus a model read in place of the keyword matcher. ~2-3 engineering-weeks plus 1-2 Ops weeks to tune.
+<div class="workflow-stack">
+  <div class="ws-col">
+    <h3>Workflow &middot; signal &rarr; triage &rarr; route</h3>
+    <ol>
+      <li><b>Ingest</b> &mdash; backlog, CRM call notes, renewal calendar</li>
+      <li><b>Match</b> &mdash; keyword anchors join AE commitments to backlog items <span style="color:#5a6573;">(prod: model read)</span></li>
+      <li><b>Classify</b> &mdash; (tag, status) &rarr; CRITICAL / HIGH / MEDIUM / LOW</li>
+      <li><b>Score</b> &mdash; <code>gap_score = arr &divide; days &times; 100</code></li>
+      <li><b>Rank</b> &mdash; sort by score, surface top three</li>
+      <li><b>Draft</b> &mdash; templated reset language per gap <span style="color:#5a6573;">(prod: model gen)</span></li>
+      <li><b>Emit</b> &mdash; ranked list, top-3 cards, weekly digest</li>
+    </ol>
+  </div>
+  <div class="ws-col">
+    <h3>Stack</h3>
+    <ul>
+      <li><b>Demo:</b> one HTML file, vanilla JS, no build, no deps</li>
+      <li><b>Hosting:</b> GitHub Pages, static</li>
+      <li><b>Logic:</b> direct port of <code>run.py</code> from the source mini-demo</li>
+      <li><b>Data:</b> 3 embedded JS arrays (mirror of <code>data/*.csv</code>)</li>
+    </ul>
+    <div class="prod">
+      <b>Production equivalent:</b> n8n or Temporal orchestrator; Jira / Linear + Gong / Salesforce + CS-tool APIs as connectors; LLM call for commitment extraction and reset drafting; Slack post for the digest, scoped DMs per AE; severity weights in a config table so Ops can tune without a deploy. <b>~2-3 engineering-weeks plus 1-2 Ops weeks.</b>
+    </div>
+  </div>
 </div>
 
 <section>
