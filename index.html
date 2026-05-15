@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roadmap-Reality Orchestration &mdash; live mini-version</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f4f5f7;
+    color: #1a2b4d;
+    margin: 0;
+    padding: 28px 20px 64px;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1140px; margin: 0 auto; }
+
+  header.hero {
+    background: linear-gradient(135deg, #1a2b4d 0%, #2d4373 100%);
+    color: white;
+    padding: 26px 32px;
+    border-radius: 12px;
+    margin-bottom: 22px;
+  }
+  header.hero h1 { margin: 0 0 6px; font-size: 24.5px; letter-spacing: -0.3px; }
+  header.hero .sub { font-size: 15.5px; opacity: 0.9; }
+  .scope {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 10px;
+  }
+
+  section {
+    background: white;
+    border-radius: 10px;
+    padding: 20px 26px;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  section h2 {
+    margin: 0 0 12px;
+    color: #1a2b4d;
+    font-size: 18.5px;
+    letter-spacing: 0.2px;
+    border-bottom: 2px solid #e2e6ec;
+    padding-bottom: 8px;
+  }
+  section h2 .tag {
+    font-size: 12.5px;
+    background: #f4d35e;
+    color: #5a4400;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 8px;
+    vertical-align: 2px;
+  }
+
+  .honesty-note {
+    background: #fff8f1;
+    border-left: 4px solid #c75b00;
+    padding: 12px 16px;
+    font-size: 14.5px;
+    color: #7a4a00;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+  .honesty-note b { color: #5a2f00; }
+
+  /* Inputs */
+  .inputs { display: grid; grid-template-columns: 1.35fr 1fr 0.85fr; gap: 12px; }
+  @media (max-width: 920px) { .inputs { grid-template-columns: 1fr; } }
+  .inputs .card {
+    background: #fafbfc;
+    border: 1px solid #e2e6ec;
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+  .inputs .card .label {
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #1a2b4d;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .inputs .card .source {
+    font-size: 12.5px;
+    color: #6a7280;
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+  table.mini { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  table.mini th {
+    background: #27406b;
+    color: white;
+    padding: 5px 6px;
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  table.mini td {
+    padding: 5px 6px;
+    border-bottom: 1px solid #eef0f3;
+    vertical-align: top;
+  }
+  table.mini tr:nth-child(even) td { background: #f5f7fa; }
+  table.mini tr.editable td { cursor: pointer; }
+  table.mini tr.editable:hover td { background: #fff8e1; }
+  table.mini select {
+    font-size: 12px;
+    padding: 1px 4px;
+    background: white;
+    border: 1px solid #d0d4d9;
+    border-radius: 3px;
+  }
+  table.mini .commit-cell {
+    cursor: text;
+    border-bottom: 1px dotted #b0b4b8;
+  }
+  table.mini .commit-cell:focus {
+    background: #fff8e1;
+    outline: 1px solid #d18e0e;
+    border-bottom: none;
+  }
+
+  .tag-committed   { color: #1d6b3a; font-weight: 600; }
+  .tag-in-progress { color: #9a6a00; font-weight: 600; }
+  .tag-speculative { color: #8a3d12; font-weight: 600; }
+  .tag-custom      { color: #5a3a8a; font-weight: 600; }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: #fafbfc;
+    border: 1px solid #e2e6ec;
+    border-radius: 8px;
+    margin-bottom: 18px;
+  }
+  .run-btn {
+    background: #1d6b3a;
+    color: white;
+    border: none;
+    font-size: 15.5px;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .run-btn:hover { background: #145024; }
+  .run-btn:disabled { background: #9aa3ad; cursor: wait; }
+  .reset-btn {
+    background: white;
+    color: #1a2b4d;
+    border: 1px solid #c0c7d0;
+    font-size: 13.5px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .reset-btn:hover { background: #f0f3f7; }
+  .controls label { font-size: 13.5px; color: #1a2b4d; cursor: pointer; user-select: none; }
+  .controls label input { margin-right: 5px; vertical-align: -1px; }
+  .controls .hint { font-size: 12.5px; color: #6a7280; margin-left: auto; }
+
+  /* Run log */
+  .run-log {
+    background: #0e1a2f;
+    color: #d6dce6;
+    font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+    font-size: 13px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    min-height: 60px;
+    line-height: 1.65;
+  }
+  .run-log .line { padding: 1px 0; opacity: 0; transform: translateY(4px); animation: fade-in 0.25s ease forwards; }
+  .run-log .line.fast { animation-duration: 0.08s; }
+  @keyframes fade-in { to { opacity: 1; transform: translateY(0); } }
+  .run-log .step { color: #8ab1d8; }
+  .run-log .match { color: #6ed09a; }
+  .run-log .miss { color: #d18e8e; }
+  .run-log .info { color: #d6dce6; }
+  .run-log .math { color: #f4d35e; font-style: italic; }
+  .run-log .severity-CRITICAL { color: #ff8a4a; font-weight: 700; }
+  .run-log .severity-HIGH { color: #ffb84a; font-weight: 700; }
+  .run-log .severity-MEDIUM { color: #f4d35e; font-weight: 700; }
+  .run-log .severity-LOW { color: #a8e6c4; font-weight: 700; }
+  .run-log .summary { color: white; font-weight: 700; margin-top: 8px; padding-top: 6px; border-top: 1px dashed #2d4373; }
+  .run-log .prompt { color: #5a6573; }
+
+  /* Ranked output */
+  .ranked-list { margin-top: 6px; }
+  .gap-row {
+    display: grid;
+    grid-template-columns: 38px 1fr 110px 130px;
+    gap: 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #eef0f3;
+    align-items: center;
+    font-size: 14.5px;
+    opacity: 0;
+    animation: fade-in 0.3s ease forwards;
+  }
+  .gap-row.header {
+    background: #27406b;
+    color: white;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    border-radius: 4px 4px 0 0;
+    opacity: 1;
+    animation: none;
+  }
+  .gap-row .rank { font-weight: 700; color: #1a2b4d; text-align: center; }
+  .gap-row .sev {
+    display: inline-block;
+    text-align: center;
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 3px;
+    min-width: 78px;
+  }
+  .sev.CRITICAL { background: #c75b00; color: white; }
+  .sev.HIGH     { background: #d18e0e; color: white; }
+  .sev.MEDIUM   { background: #f4d35e; color: #5a4400; }
+  .sev.LOW      { background: #a8e6c4; color: #1d4a2a; }
+  .gap-row .arr-cell { text-align: right; font-weight: 600; color: #1a2b4d; }
+  .gap-row .arr-cell .sub { font-weight: 400; font-size: 12.5px; color: #5a6573; display:block; }
+  .gap-row .account { font-weight: 600; }
+  .gap-row .commit { font-size: 13px; color: #5a6573; font-style: italic; margin-top: 2px; }
+  .gap-row .math-row {
+    font-size: 12px;
+    color: #5a6573;
+    margin-top: 4px;
+    font-family: "SF Mono", Menlo, monospace;
+  }
+
+  /* Top 3 */
+  .top3 .item {
+    background: #fafbfc;
+    border-left: 4px solid #1a2b4d;
+    border-radius: 0 6px 6px 0;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: fade-in 0.35s ease forwards;
+  }
+  .top3 .item.critical { border-left-color: #c75b00; background: #fff8f1; }
+  .top3 .item.high     { border-left-color: #d18e0e; background: #fffaf0; }
+  .top3 .item .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .top3 .item .acct { font-weight: 700; color: #1a2b4d; font-size: 16px; }
+  .top3 .item .meta { font-size: 13px; color: #5a6573; }
+  .top3 .item .row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 8px;
+    font-size: 14px;
+    margin: 4px 0;
+  }
+  .top3 .item .row .k {
+    color: #5a6573;
+    text-transform: uppercase;
+    font-size: 11.5px;
+    letter-spacing: 0.6px;
+    padding-top: 2px;
+  }
+  .top3 .item .reset {
+    background: white;
+    border: 1px dashed #c75b00;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #1a2b4d;
+    line-height: 1.55;
+  }
+  .top3 .item .reset .lbl {
+    display: block;
+    color: #c75b00;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  /* Digest */
+  .digest {
+    background: #1a2b4d;
+    color: white;
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 15px;
+    line-height: 1.55;
+    opacity: 0;
+    animation: fade-in 0.4s ease forwards;
+  }
+  .digest .lbl {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #f4d35e;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+
+  .hidden { display: none; }
+
+  footer {
+    font-size: 13px;
+    color: #6a7280;
+    text-align: center;
+    margin-top: 18px;
+    line-height: 1.55;
+  }
+  footer a { color: #2d4373; }
+
+  .empty-state {
+    color: #6a7280;
+    font-style: italic;
+    font-size: 14.5px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  /* Help text */
+  .help {
+    font-size: 12.5px;
+    color: #5a6573;
+    margin-top: 8px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>Roadmap-Reality Orchestration &mdash; live mini-version</h1>
+  <div class="sub">Same shape I walked on screen yesterday, now runnable in the browser. Click <b>Run</b> to see the orchestration match commitments against the backlog, score gaps by revenue and renewal proximity, and draft reset language end-to-end.</div>
+  <span class="scope">Mock data &middot; vanilla JS &middot; no build step &middot; same logic as <code>run.py</code></span>
+</header>
+
+<div class="honesty-note">
+  <b>Honest framing.</b> Mock data, three CSVs in JavaScript variables, not wired to Jira / Gong / Salesforce. The point is the <b>signal &rarr; triage &rarr; route</b> shape. Editable inputs &mdash; change a backlog tag, edit a call-note commitment, re-run, see the digest shift. <b>Production</b> is the same shape with live API connectors plus a model read in place of the keyword matcher. ~2-3 engineering-weeks plus 1-2 Ops weeks to tune.
+</div>
+
+<section>
+  <h2>1. The three input sources <span class="tag">editable</span></h2>
+
+  <div class="inputs">
+
+    <div class="card">
+      <div class="label">Product backlog</div>
+      <div class="source">Mock Jira / Linear / shared roadmap doc &mdash; click tag or status to change</div>
+      <table class="mini" id="backlogTable">
+        <thead><tr><th>Item</th><th>Tag</th><th>Status</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="label">CRM call notes</div>
+      <div class="source">Mock Gong + Salesforce notes &mdash; click commitment text to edit</div>
+      <table class="mini" id="notesTable">
+        <thead><tr><th>Date</th><th>Account / AE</th><th>Commitment</th><th>ARR</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="label">Renewal calendar</div>
+      <div class="source">Mock CS tool / SFDC renewal dates</div>
+      <table class="mini" id="renewalsTable">
+        <thead><tr><th>Account</th><th>Renews</th><th>ARR</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="controls">
+  <button class="run-btn" id="runBtn">&#9654; Run orchestration</button>
+  <label><input type="checkbox" id="stepThroughChk" checked> Step through (slow)</label>
+  <label><input type="checkbox" id="showMathChk"> Show the math</label>
+  <button class="reset-btn" id="resetBtn">Reset to defaults</button>
+  <span class="hint">Today is set to <code>2018-05-13</code> (Dharma window). All renewal math is relative to that.</span>
+</div>
+
+<section>
+  <h2>2. Orchestration run log</h2>
+  <div class="run-log" id="runLog">
+    <div class="prompt">$ python3 run.py &mdash; <em>waiting for input. Click Run above.</em></div>
+  </div>
+  <div class="help">The matcher uses keyword anchors here. Production reads the call-summary text with a model, then falls back to keywords as a sanity check. Same orchestration shape either way.</div>
+</section>
+
+<section id="resultsSection" class="hidden">
+  <h2>3. Ranked gap list</h2>
+  <div class="ranked-list" id="rankedList">
+    <div class="gap-row header">
+      <div>#</div>
+      <div>Account &middot; commitment</div>
+      <div style="text-align:center;">Severity</div>
+      <div style="text-align:right;">ARR / renewal</div>
+    </div>
+    <div id="rankedRows"></div>
+  </div>
+</section>
+
+<section id="top3Section" class="hidden">
+  <h2>4. Top three gaps, drafted reset language</h2>
+  <div class="top3" id="top3Container"></div>
+  <div class="help">In production this is a model-generation step with the same inputs. The mechanic is real, the natural-language is templated here so the demo is deterministic.</div>
+</section>
+
+<section id="digestSection" class="hidden">
+  <h2>5. Weekly leadership digest</h2>
+  <div class="digest" id="digestLine"></div>
+  <div class="help">Production auto-posts this to <code>#roadmap-reality</code> at 07:00 Monday. AE-facing reset DMs go out at the same time, scoped per AE.</div>
+</section>
+
+<section>
+  <h2>What's intentionally not in this build</h2>
+  <ul style="font-size: 14.5px; color:#1a2b4d; margin:0; padding-left:20px;">
+    <li><b>Live integrations.</b> Production swaps the embedded JS data for Jira, Gong/Salesforce, and CS-tool API calls.</li>
+    <li><b>Model-based commitment extraction.</b> This demo uses keyword anchors. Production reads call-summary text with a model.</li>
+    <li><b>Per-AE Slack DMs.</b> The mini-version emits one digest. Production routes drafted reset language to each AE individually.</li>
+    <li><b>Severity weights in code.</b> In production they belong in a config table so Ops can tune without a deploy.</li>
+  </ul>
+</section>
+
+<footer>
+  Built as a follow-up to the Scribd Product Operations Lead final, 2026-05-14. Logic mirrors <code>run.py</code> from the mini-demo. One HTML file, vanilla JS, no dependencies &mdash; view source if you want to read it. &mdash; John Boyle
+</footer>
+
+</div>
+
+<script>
+// ---------------------------------------------------------------------------
+// Data (embedded from the CSVs in mini-demo/data/)
+// ---------------------------------------------------------------------------
+
+const DEFAULT_BACKLOG = [
+  { item: "offline-first mobile collection (sync on reconnect)", tag: "in-progress", status: "at-risk", target: "Q3 2018" },
+  { item: "reusable survey templates / instrument library", tag: "committed", status: "on-track", target: "shipped" },
+  { item: "longitudinal respondent tracking", tag: "committed", status: "on-track", target: "Q2 2018" },
+  { item: "visual form builder v2 (drag-drop logic)", tag: "in-progress", status: "at-risk", target: "Q3 2018" },
+  { item: "dashboard / report builder (self-serve analytics)", tag: "in-progress", status: "slipped", target: "Q4 2018" },
+  { item: "multi-language + RTL support", tag: "committed", status: "on-track", target: "Q2 2018" },
+  { item: "role-based access control", tag: "committed", status: "on-track", target: "shipped" },
+  { item: "MSF Barcelona white-labeled instance", tag: "custom", status: "on-track", target: "—" },
+  { item: "self-serve app builder (Squarespace for enterprise data collection)", tag: "speculative", status: "not-resourced", target: "—" },
+  { item: "public REST API + webhooks", tag: "speculative", status: "not-resourced", target: "—" },
+  { item: "GPS / geofencing for survey validation", tag: "in-progress", status: "at-risk", target: "Q3 2018" },
+  { item: "audit log / data-change history", tag: "committed", status: "at-risk", target: "Q3 2018" }
+];
+
+const DEFAULT_NOTES = [
+  { date: "2018-05-02", account: "MSF Sahel Operations", ae: "K. Pullen",  commitment: "promised offline-first sync GA by end of Q3 for Sahel rollout", arr: 48000 },
+  { date: "2018-05-04", account: "UNICEF Kenya",         ae: "K. Pullen",  commitment: "committed self-serve app builder demo in 6 weeks for non-technical regional teams", arr: 72000 },
+  { date: "2018-05-06", account: "GiveDirectly Research",ae: "S. Scarpino",commitment: "promised public REST API by Q3 for partner data integrations", arr: 36000 },
+  { date: "2018-05-07", account: "IRC Jordan",           ae: "S. Scarpino",commitment: "committed dashboard builder available at renewal so program managers can self-serve reports", arr: 54000 },
+  { date: "2018-05-08", account: "Save the Children Sahel", ae: "K. Pullen", commitment: "promised MSF-style white-labeled instance with custom branding by Q3", arr: 22000 },
+  { date: "2018-05-09", account: "Oxfam GB",             ae: "S. Scarpino",commitment: "committed offline-first sync plus GPS validation bundled at current ARR", arr: 41000 },
+  { date: "2018-05-10", account: "World Vision East Africa", ae: "K. Pullen", commitment: "promised self-serve app builder so country offices can spin up deployments without engineering", arr: 65000 },
+  { date: "2018-05-11", account: "CARE Bangladesh",      ae: "S. Scarpino",commitment: "committed audit log and RBAC available before IRB review next month", arr: 28000 }
+];
+
+const DEFAULT_RENEWALS = [
+  { account: "MSF Sahel Operations",        renewal: "2018-06-15", arr: 48000 },
+  { account: "World Vision East Africa",    renewal: "2018-06-20", arr: 65000 },
+  { account: "IRC Jordan",                  renewal: "2018-06-28", arr: 54000 },
+  { account: "Save the Children Sahel",     renewal: "2018-07-10", arr: 22000 },
+  { account: "UNICEF Kenya",                renewal: "2018-07-22", arr: 72000 },
+  { account: "CARE Bangladesh",             renewal: "2018-07-30", arr: 28000 },
+  { account: "GiveDirectly Research",       renewal: "2018-08-05", arr: 36000 },
+  { account: "Oxfam GB",                    renewal: "2018-08-12", arr: 41000 }
+];
+
+const TODAY = new Date("2018-05-13");
+
+let backlog  = structuredClone(DEFAULT_BACKLOG);
+let notes    = structuredClone(DEFAULT_NOTES);
+let renewals = structuredClone(DEFAULT_RENEWALS);
+
+// ---------------------------------------------------------------------------
+// Matcher, severity, reset templates (mirrors run.py)
+// ---------------------------------------------------------------------------
+
+const KEYWORD_MAP = [
+  ["offline-first sync",     "offline-first mobile collection"],
+  ["offline-first",          "offline-first mobile collection"],
+  ["self-serve app builder", "self-serve app builder"],
+  ["app builder",            "self-serve app builder"],
+  ["public REST API",        "public REST API"],
+  ["REST API",               "public REST API"],
+  ["dashboard builder",      "dashboard / report builder"],
+  ["white-labeled instance", "MSF Barcelona white-labeled instance"],
+  ["white-label",            "MSF Barcelona white-labeled instance"],
+  ["GPS validation",         "GPS / geofencing for survey validation"],
+  ["audit log",              "audit log / data-change history"],
+  ["RBAC",                   "role-based access control"]
+];
+
+const SEVERITY_TABLE = {
+  "speculative|not-resourced": "CRITICAL",
+  "custom|on-track":            "HIGH",
+  "in-progress|slipped":        "HIGH",
+  "in-progress|at-risk":        "MEDIUM",
+  "committed|at-risk":          "MEDIUM"
+};
+
+function findBacklog(commitment) {
+  const text = commitment.toLowerCase();
+  for (const [needle, target] of KEYWORD_MAP) {
+    if (text.includes(needle.toLowerCase())) {
+      const row = backlog.find(b => b.item.toLowerCase().includes(target.toLowerCase()));
+      if (row) return { row, needle, target };
+    }
+  }
+  return null;
+}
+
+function classifyGap(row) {
+  const key = `${row.tag}|${row.status}`;
+  if (key === "committed|on-track") return null;
+  return SEVERITY_TABLE[key] || "LOW";
+}
+
+function draftReset(row, account, ae, commitment, dateStr, renewalStr) {
+  const target = (row.target && row.target !== "—") ? row.target : "no firm date";
+
+  let what = commitment.split(",")[0].trim();
+  for (const verb of ["promised ", "committed "]) {
+    if (what.toLowerCase().startsWith(verb)) { what = what.slice(verb.length); break; }
+  }
+
+  let key;
+  if      (row.tag === "speculative") key = "speculative";
+  else if (row.tag === "custom")      key = "custom";
+  else if (row.status === "slipped")  key = "slipped";
+  else                                key = "at-risk";
+
+  const templates = {
+    speculative: `Re: ${account}. We committed ${what} in the ${dateStr} call. Engineering shows that item is speculative, no date, no owner, not on the near-term roadmap. Suggested reset to ${ae}, before the ${renewalStr} renewal: walk it back to roadmap interest only. Honest line for the customer, "not on the near-term roadmap, want to keep talking about the underlying need." Do not put a date on it.`,
+    custom:      `Re: ${account}. We committed ${what} in the ${dateStr} call. Engineering shows the only instance like this is a one-account custom build, MSF Barcelona, not productized. Suggested reset to ${ae}: name it as custom work, scope it as a separate SOW, do not imply parity with the core product before the ${renewalStr} renewal.`,
+    slipped:     `Re: ${account}. We committed ${what} in the ${dateStr} call. Engineering shows the item is in progress but slipped to ${target}. Suggested reset to ${ae}, before the ${renewalStr} renewal: pull the date forward in the customer conversation to ${target}, demo what exists today, and offer a beta-access path so the renewal does not hinge on a date we cannot hold.`,
+    "at-risk":   `Re: ${account}. We committed ${what} in the ${dateStr} call. Engineering shows ${target} is the target but the item is at-risk. Suggested reset to ${ae}, ahead of the ${renewalStr} renewal: hedge the date with "targeting ${target}, will confirm at the next roadmap review," demo what is shippable today, do not put a calendar commitment on it.`
+  };
+
+  return templates[key];
+}
+
+function daysBetween(dateStr) {
+  const d = new Date(dateStr);
+  return Math.max(Math.round((d - TODAY) / (1000 * 60 * 60 * 24)), 1);
+}
+
+function orchestrate() {
+  const gaps = [];
+  for (const note of notes) {
+    const matched = findBacklog(note.commitment);
+    if (!matched) { gaps.push({ note, matched: null, severity: null, miss: "no backlog keyword matched" }); continue; }
+    const severity = classifyGap(matched.row);
+    if (!severity)  { gaps.push({ note, matched, severity: null, miss: `${matched.row.tag}/${matched.row.status} = safe, no gap` }); continue; }
+    const renewal = renewals.find(r => r.account === note.account);
+    if (!renewal)   { gaps.push({ note, matched, severity, miss: "account not in renewal calendar" }); continue; }
+    const days = daysBetween(renewal.renewal);
+    const score = +(note.arr / days * 100).toFixed(2);
+
+    gaps.push({
+      note,
+      matched,
+      severity,
+      score,
+      days,
+      renewal,
+      resetLanguage: draftReset(matched.row, note.account, note.ae, note.commitment, note.date, renewal.renewal)
+    });
+  }
+  return gaps;
+}
+
+// ---------------------------------------------------------------------------
+// Rendering
+// ---------------------------------------------------------------------------
+
+function tagClass(tag) {
+  return `tag-${tag.replace(/[^a-z\-]/g, "")}`;
+}
+
+function renderBacklog() {
+  const tbody = document.querySelector("#backlogTable tbody");
+  tbody.innerHTML = "";
+  backlog.forEach((b, i) => {
+    const tr = document.createElement("tr");
+    tr.className = "editable";
+
+    const tdItem   = document.createElement("td");
+    tdItem.textContent = b.item;
+    tdItem.style.fontSize = "11.5px";
+
+    const tdTag = document.createElement("td");
+    const selTag = document.createElement("select");
+    ["committed", "in-progress", "speculative", "custom"].forEach(v => {
+      const o = document.createElement("option");
+      o.value = v; o.textContent = v;
+      if (v === b.tag) o.selected = true;
+      selTag.appendChild(o);
+    });
+    selTag.className = tagClass(b.tag);
+    selTag.addEventListener("change", () => { backlog[i].tag = selTag.value; selTag.className = tagClass(selTag.value); });
+    tdTag.appendChild(selTag);
+
+    const tdStatus = document.createElement("td");
+    const selStatus = document.createElement("select");
+    ["on-track", "at-risk", "slipped", "not-resourced"].forEach(v => {
+      const o = document.createElement("option");
+      o.value = v; o.textContent = v;
+      if (v === b.status) o.selected = true;
+      selStatus.appendChild(o);
+    });
+    selStatus.addEventListener("change", () => { backlog[i].status = selStatus.value; });
+    tdStatus.appendChild(selStatus);
+
+    tr.append(tdItem, tdTag, tdStatus);
+    tbody.appendChild(tr);
+  });
+}
+
+function renderNotes() {
+  const tbody = document.querySelector("#notesTable tbody");
+  tbody.innerHTML = "";
+  notes.forEach((n, i) => {
+    const tr = document.createElement("tr");
+
+    const tdDate = document.createElement("td");
+    tdDate.textContent = n.date.slice(5);
+    tdDate.style.whiteSpace = "nowrap";
+
+    const tdAcct = document.createElement("td");
+    tdAcct.innerHTML = `<strong>${n.account}</strong><br><span style="color:#5a6573; font-size:11.5px;">${n.ae}</span>`;
+
+    const tdCommit = document.createElement("td");
+    const commitSpan = document.createElement("span");
+    commitSpan.className = "commit-cell";
+    commitSpan.contentEditable = "true";
+    commitSpan.textContent = n.commitment;
+    commitSpan.style.fontSize = "11.5px";
+    commitSpan.style.fontStyle = "italic";
+    commitSpan.addEventListener("input", () => { notes[i].commitment = commitSpan.textContent; });
+    tdCommit.appendChild(commitSpan);
+
+    const tdArr = document.createElement("td");
+    tdArr.style.textAlign = "right";
+    tdArr.style.whiteSpace = "nowrap";
+    tdArr.textContent = `$${(n.arr/1000).toFixed(0)}K`;
+
+    tr.append(tdDate, tdAcct, tdCommit, tdArr);
+    tbody.appendChild(tr);
+  });
+}
+
+function renderRenewals() {
+  const tbody = document.querySelector("#renewalsTable tbody");
+  tbody.innerHTML = "";
+  renewals.forEach(r => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${r.account}</td>
+      <td style="white-space:nowrap;">${r.renewal.slice(5)}</td>
+      <td style="text-align:right; white-space:nowrap;">$${(r.arr/1000).toFixed(0)}K</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function logLine(html, cls = "") {
+  const div = document.createElement("div");
+  div.className = "line " + cls;
+  div.innerHTML = html;
+  document.getElementById("runLog").appendChild(div);
+  return div;
+}
+
+function clearLog() {
+  document.getElementById("runLog").innerHTML = "";
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function fmtMoney(n) { return "$" + n.toLocaleString(); }
+
+// ---------------------------------------------------------------------------
+// Main run handler
+// ---------------------------------------------------------------------------
+
+async function runOrchestration() {
+  const stepThrough = document.getElementById("stepThroughChk").checked;
+  const showMath    = document.getElementById("showMathChk").checked;
+  const delay       = stepThrough ? 380 : 0;
+  const lineClass   = stepThrough ? "" : "fast";
+
+  document.getElementById("runBtn").disabled = true;
+  document.getElementById("runBtn").innerHTML = "&hellip; running";
+
+  document.getElementById("resultsSection").classList.add("hidden");
+  document.getElementById("top3Section").classList.add("hidden");
+  document.getElementById("digestSection").classList.add("hidden");
+
+  clearLog();
+  logLine(`<span class="prompt">$ node orchestrate.js</span>`, lineClass);
+  logLine(`<span class="step">[loading]</span> <span class="info">${backlog.length} backlog items, ${notes.length} call notes, ${renewals.length} renewal records. Today = 2018-05-13.</span>`, lineClass);
+  await sleep(delay);
+
+  const results = [];
+
+  for (let i = 0; i < notes.length; i++) {
+    const note = notes[i];
+
+    logLine(`<span class="step">[note ${i+1}/${notes.length}]</span> <span class="info">${note.account} (${note.ae}, ${fmtMoney(note.arr)}) — "${note.commitment.length > 70 ? note.commitment.slice(0, 70) + "..." : note.commitment}"</span>`, lineClass);
+    await sleep(delay);
+
+    const matched = findBacklog(note.commitment);
+    if (!matched) {
+      logLine(`  &rarr; <span class="miss">NO MATCH</span> — no keyword anchor hit in this commitment. <span class="info">(In prod: model read picks it up.)</span>`, lineClass);
+      await sleep(delay);
+      continue;
+    }
+
+    logLine(`  &rarr; matched keyword <code>"${matched.needle}"</code> → backlog item <code>"${matched.row.item.slice(0, 50)}${matched.row.item.length > 50 ? '...' : ''}"</code> [<span class="tag-${matched.row.tag.replace(/[^a-z\-]/g, '')}">${matched.row.tag}</span> / ${matched.row.status}]`, lineClass);
+    await sleep(delay);
+
+    const severity = classifyGap(matched.row);
+    if (!severity) {
+      logLine(`  &rarr; <span class="match">SAFE</span> — committed + on-track. No gap. Skipping.`, lineClass);
+      await sleep(delay);
+      continue;
+    }
+
+    const renewal = renewals.find(r => r.account === note.account);
+    if (!renewal) {
+      logLine(`  &rarr; <span class="miss">account not in renewal calendar</span>, skipping`, lineClass);
+      await sleep(delay);
+      continue;
+    }
+
+    const days = daysBetween(renewal.renewal);
+    const score = +(note.arr / days * 100).toFixed(2);
+
+    if (showMath) {
+      logLine(`  &rarr; <span class="math">math: ${fmtMoney(note.arr)} ÷ ${days}d × 100 = ${score.toFixed(2)}</span>`, lineClass);
+      await sleep(delay);
+    }
+
+    logLine(`  &rarr; <span class="severity-${severity}">GAP — ${severity}</span>, score ${score.toFixed(2)}, ${days} days to renewal (${renewal.renewal})`, lineClass);
+
+    results.push({
+      ...note,
+      severity,
+      score,
+      days,
+      renewalDate: renewal.renewal,
+      backlogRow: matched.row,
+      resetLanguage: draftReset(matched.row, note.account, note.ae, note.commitment, note.date, renewal.renewal)
+    });
+    await sleep(delay);
+  }
+
+  results.sort((a, b) => b.score - a.score);
+
+  const totalArr = results.reduce((s, g) => s + g.arr, 0);
+  await sleep(delay);
+  logLine(`<span class="summary">DETECTED ${results.length} gaps. Total revenue at risk in next 90 days: ${fmtMoney(totalArr)}.</span>`, lineClass);
+
+  renderRanked(results, showMath);
+  renderTop3(results);
+  renderDigest(results, totalArr);
+
+  document.getElementById("runBtn").disabled = false;
+  document.getElementById("runBtn").innerHTML = "&#9654; Run again";
+}
+
+function renderRanked(results, showMath) {
+  const container = document.getElementById("rankedRows");
+  container.innerHTML = "";
+  if (results.length === 0) {
+    container.innerHTML = '<div class="empty-state">No gaps detected. Everything Sales is selling, Engineering is shipping. Edit a backlog tag back to <code>speculative</code> and try again.</div>';
+  } else {
+    results.forEach((g, i) => {
+      const row = document.createElement("div");
+      row.className = "gap-row";
+      row.style.animationDelay = (i * 0.04) + "s";
+      row.innerHTML = `
+        <div class="rank">${i+1}</div>
+        <div>
+          <div class="account">${g.account}</div>
+          <div class="commit">"${g.commitment}"</div>
+          ${showMath ? `<div class="math-row">score = ${fmtMoney(g.arr)} ÷ ${g.days}d × 100 = <strong>${g.score.toFixed(2)}</strong> · matched: ${g.backlogRow.item.slice(0, 40)}${g.backlogRow.item.length > 40 ? '...' : ''} [${g.backlogRow.tag}/${g.backlogRow.status}]</div>` : ""}
+        </div>
+        <div style="text-align:center;"><span class="sev ${g.severity}">${g.severity}</span></div>
+        <div class="arr-cell">${fmtMoney(g.arr)}<span class="sub">${g.renewalDate.slice(5)}, ${g.days} days</span></div>
+      `;
+      container.appendChild(row);
+    });
+  }
+  document.getElementById("resultsSection").classList.remove("hidden");
+}
+
+function renderTop3(results) {
+  const container = document.getElementById("top3Container");
+  container.innerHTML = "";
+  const top = results.slice(0, 3);
+  if (top.length === 0) {
+    document.getElementById("top3Section").classList.add("hidden");
+    return;
+  }
+  top.forEach((g, i) => {
+    const div = document.createElement("div");
+    let sevClass = "";
+    if (g.severity === "CRITICAL") sevClass = "critical";
+    else if (g.severity === "HIGH") sevClass = "high";
+    div.className = "item " + sevClass;
+    div.style.animationDelay = (i * 0.1) + "s";
+    div.innerHTML = `
+      <div class="head">
+        <span class="acct">#${i+1} · ${g.account}</span>
+        <span class="meta">${g.ae} · ${fmtMoney(g.arr)} ARR · renews ${g.renewalDate} (${g.days} days)</span>
+      </div>
+      <div class="row"><span class="k">Commitment</span><span>"${g.commitment}"</span></div>
+      <div class="row"><span class="k">Reality</span><span>${g.backlogRow.item}, tag=<strong>${g.backlogRow.tag}</strong>, status=<strong>${g.backlogRow.status}</strong></span></div>
+      <div class="reset">
+        <span class="lbl">Suggested reset to ${g.ae}</span>
+        ${g.resetLanguage}
+      </div>
+    `;
+    container.appendChild(div);
+  });
+  document.getElementById("top3Section").classList.remove("hidden");
+}
+
+function renderDigest(results, totalArr) {
+  const top = results.slice(0, 3);
+  if (top.length === 0) {
+    document.getElementById("digestSection").classList.add("hidden");
+    return;
+  }
+  const topStr = top.map(g => `${g.account} (${fmtMoney(g.arr)}, ${g.severity})`).join("; ");
+  document.getElementById("digestLine").innerHTML = `
+    <span class="lbl">#roadmap-reality · auto-posted Monday 07:00</span>
+    Week of 2018-05-13: ${results.length} open Sales/Engineering gaps, ${fmtMoney(totalArr)} in renewal ARR exposed in next 90 days. Top three: ${topStr}. Reset language drafted, awaiting AE review.
+  `;
+  document.getElementById("digestSection").classList.remove("hidden");
+}
+
+// ---------------------------------------------------------------------------
+// Init
+// ---------------------------------------------------------------------------
+
+document.getElementById("runBtn").addEventListener("click", runOrchestration);
+document.getElementById("resetBtn").addEventListener("click", () => {
+  backlog  = structuredClone(DEFAULT_BACKLOG);
+  notes    = structuredClone(DEFAULT_NOTES);
+  renewals = structuredClone(DEFAULT_RENEWALS);
+  renderBacklog();
+  renderNotes();
+  renderRenewals();
+  clearLog();
+  logLine(`<span class="prompt">$ python3 run.py — <em>waiting for input. Click Run above.</em></span>`);
+  document.getElementById("resultsSection").classList.add("hidden");
+  document.getElementById("top3Section").classList.add("hidden");
+  document.getElementById("digestSection").classList.add("hidden");
+  document.getElementById("runBtn").innerHTML = "&#9654; Run orchestration";
+});
+
+renderBacklog();
+renderNotes();
+renderRenewals();
+</script>
+</body>
+</html>
