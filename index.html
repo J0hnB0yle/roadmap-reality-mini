@@ -144,6 +144,35 @@
   }
   .ws-col .prod .cost b { color: #1d6b3a; }
 
+  /* n8n-style workflow canvas */
+  .n8n-canvas {
+    background: #fafbfc;
+    border: 1px solid #e2e6ec;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 4px;
+  }
+  .n8n-canvas svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .n8n-canvas .corner-badge {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid #cdd3dc;
+    color: #5a6573;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+
   /* Inputs */
   .inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
   @media (max-width: 920px) { .inputs { grid-template-columns: 1fr; } }
@@ -469,6 +498,142 @@
     </div>
   </div>
 </div>
+
+<section>
+  <h2>Production workflow shape <span class="tag">n8n mockup</span></h2>
+  <p class="help" style="margin: -4px 0 12px;">What the workflow would look like wired up in n8n. The demo on this page runs the same logic inline in JavaScript so you can see it work without standing up the workflow tool.</p>
+
+  <div class="n8n-canvas">
+    <span class="corner-badge">roadmap-reality &middot; 10 nodes</span>
+    <svg viewBox="0 0 1250 500" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="n8n-style mockup of the production workflow">
+      <defs>
+        <pattern id="dotgrid" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1.1" fill="#dde1e8"/>
+        </pattern>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 Z" fill="#9aa3b0"/>
+        </marker>
+      </defs>
+
+      <rect width="1250" height="500" fill="#fafbfc"/>
+      <rect width="1250" height="500" fill="url(#dotgrid)"/>
+
+      <!-- ============ EDGES (drawn first so they sit behind nodes) ============ -->
+      <g stroke="#9aa3b0" stroke-width="1.6" fill="none">
+        <!-- Trigger → 3 Sources -->
+        <path d="M 170 250 C 188 250, 188 100, 205 100" marker-end="url(#arrow)"/>
+        <path d="M 170 250 L 205 250"                   marker-end="url(#arrow)"/>
+        <path d="M 170 250 C 188 250, 188 400, 205 400" marker-end="url(#arrow)"/>
+        <!-- 3 Sources → Merge -->
+        <path d="M 345 100 C 363 100, 363 250, 380 250" marker-end="url(#arrow)"/>
+        <path d="M 345 250 L 380 250"                   marker-end="url(#arrow)"/>
+        <path d="M 345 400 C 363 400, 363 250, 380 250" marker-end="url(#arrow)"/>
+        <!-- Main pipeline -->
+        <path d="M 520 250 L 555 250" marker-end="url(#arrow)"/>
+        <path d="M 695 250 L 730 250" marker-end="url(#arrow)"/>
+        <path d="M 870 250 L 905 250" marker-end="url(#arrow)"/>
+        <!-- Claude draft → 2 Outputs -->
+        <path d="M 1045 250 C 1063 250, 1063 175, 1080 175" marker-end="url(#arrow)"/>
+        <path d="M 1045 250 C 1063 250, 1063 325, 1080 325" marker-end="url(#arrow)"/>
+      </g>
+
+      <!-- ============ NODES ============ -->
+      <g font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+
+        <!-- 1. Schedule Trigger -->
+        <g transform="translate(30, 220)">
+          <rect width="140" height="60" rx="6" fill="white" stroke="#6366f1" stroke-width="1.8"/>
+          <circle cx="22" cy="30" r="14" fill="#6366f1"/>
+          <text x="22" y="35" text-anchor="middle" font-size="14" fill="white">&#9200;</text>
+          <text x="44" y="26" font-size="11.5" font-weight="700" fill="#1a2b4d">Schedule</text>
+          <text x="44" y="42" font-size="9.5" fill="#5a6573">Mon 07:00 weekly</text>
+        </g>
+
+        <!-- 2. Jira (top source) -->
+        <g transform="translate(205, 70)">
+          <rect width="140" height="60" rx="6" fill="white" stroke="#cdd3dc" stroke-width="1.5"/>
+          <circle cx="22" cy="30" r="14" fill="#2563eb"/>
+          <text x="22" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="white">J</text>
+          <text x="44" y="26" font-size="11.5" font-weight="700" fill="#1a2b4d">Atlassian: Jira</text>
+          <text x="44" y="42" font-size="9.5" fill="#5a6573">Get backlog items</text>
+        </g>
+
+        <!-- 3. Gong (middle source) -->
+        <g transform="translate(205, 220)">
+          <rect width="140" height="60" rx="6" fill="white" stroke="#cdd3dc" stroke-width="1.5"/>
+          <circle cx="22" cy="30" r="14" fill="#0d9488"/>
+          <text x="22" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="white">G</text>
+          <text x="44" y="26" font-size="11.5" font-weight="700" fill="#1a2b4d">Gong</text>
+          <text x="44" y="42" font-size="9.5" fill="#5a6573">Get call summaries</text>
+        </g>
+
+        <!-- 4. Salesforce (bottom source) -->
+        <g transform="translate(205, 370)">
+          <rect width="140" height="60" rx="6" fill="white" stroke="#cdd3dc" stroke-width="1.5"/>
+          <circle cx="22" cy="30" r="14" fill="#0ea5e9"/>
+          <text x="22" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="white">S</text>
+          <text x="44" y="26" font-size="11.5" font-weight="700" fill="#1a2b4d">Salesforce</text>
+          <text x="44" y="42" font-size="9.5" fill="#5a6573">Get renewal dates</text>
+        </g>
+
+        <!-- 5. Merge -->
+        <g transform="translate(380, 220)">
+          <rect width="140" height="60" rx="6" fill="white" stroke="#cdd3dc" stroke-width="1.5"/>
+          <circle cx="22" cy="30" r="14" fill="#475569"/>
+          <text x="22" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="white">M</text>
+          <text x="44" y="26" font-size="11.5" font-weight="700" fill="#1a2b4d">Merge</text>
+          <text x="44" y="42" font-size="9.5" fill="#5a6573">Join on account</text>
+        </g>
+
+        <!-- 6. Claude: extract commitments -->
+        <g transform="translate(555, 220)">
+          <rect width="140" height="60" rx="6" fill="white" stroke="#cdd3dc" stroke-width="1.5"/>
+          <circle cx="22" cy="30" r="14" fill="#cc785c"/>
+          <text x="22" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="white">AI</text>
+          <text x="44" y="26" font-size="11.5" font-weight="700" fill="#1a2b4d">Anthropic: Claude</text>
+          <text x="44" y="42" font-size="9.5" fill="#5a6573">Extract commitments</text>
+        </g>
+
+        <!-- 7. Code: classify + score -->
+        <g transform="translate(730, 220)">
+          <rect width="140" height="60" rx="6" fill="white" stroke="#cdd3dc" stroke-width="1.5"/>
+          <circle cx="22" cy="30" r="14" fill="#27406b"/>
+          <text x="22" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="ui-monospace, monospace">{}</text>
+          <text x="44" y="26" font-size="11.5" font-weight="700" fill="#1a2b4d">Code (JavaScript)</text>
+          <text x="44" y="42" font-size="9.5" fill="#5a6573">Classify + score gaps</text>
+        </g>
+
+        <!-- 8. Claude: draft reset language -->
+        <g transform="translate(905, 220)">
+          <rect width="140" height="60" rx="6" fill="white" stroke="#cdd3dc" stroke-width="1.5"/>
+          <circle cx="22" cy="30" r="14" fill="#cc785c"/>
+          <text x="22" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="white">AI</text>
+          <text x="44" y="26" font-size="11.5" font-weight="700" fill="#1a2b4d">Anthropic: Claude</text>
+          <text x="44" y="42" font-size="9.5" fill="#5a6573">Draft reset language</text>
+        </g>
+
+        <!-- 9. Slack: leadership channel (top output) -->
+        <g transform="translate(1080, 145)">
+          <rect width="140" height="60" rx="6" fill="white" stroke="#cdd3dc" stroke-width="1.5"/>
+          <circle cx="22" cy="30" r="14" fill="#4a154b"/>
+          <text x="22" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="white">#</text>
+          <text x="44" y="26" font-size="11.5" font-weight="700" fill="#1a2b4d">Slack: channel</text>
+          <text x="44" y="42" font-size="9.5" fill="#5a6573">#roadmap-reality</text>
+        </g>
+
+        <!-- 10. Slack: AE DMs (bottom output) -->
+        <g transform="translate(1080, 295)">
+          <rect width="140" height="60" rx="6" fill="white" stroke="#cdd3dc" stroke-width="1.5"/>
+          <circle cx="22" cy="30" r="14" fill="#4a154b"/>
+          <text x="22" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="white">@</text>
+          <text x="44" y="26" font-size="11.5" font-weight="700" fill="#1a2b4d">Slack: DM</text>
+          <text x="44" y="42" font-size="9.5" fill="#5a6573">Scoped per AE</text>
+        </g>
+
+      </g>
+    </svg>
+  </div>
+</section>
 
 <section>
   <h2>1. The three input sources <span class="tag">editable</span></h2>
