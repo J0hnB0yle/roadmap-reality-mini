@@ -122,8 +122,8 @@
   }
   .ws-col .prod dl > div {
     display: grid;
-    grid-template-columns: 96px 1fr;
-    gap: 8px;
+    grid-template-columns: 110px 1fr;
+    gap: 12px;
     padding: 2px 0;
   }
   .ws-col .prod dt {
@@ -133,7 +133,6 @@
     letter-spacing: 0.5px;
     padding-top: 2px;
   }
-  .ws-col .prod dt::after { content: ":"; }
   .ws-col .prod dd { margin: 0; }
   .ws-col .prod .cost {
     margin-top: 6px;
@@ -460,11 +459,11 @@
     <div class="prod">
       <div class="prod-label">Production equivalent</div>
       <dl>
-        <div><dt>Orchestrator</dt><dd>n8n</dd></div>
-        <div><dt>Connectors</dt><dd>Jira / Linear &middot; Gong / Salesforce &middot; CS tool</dd></div>
-        <div><dt>Model layer</dt><dd>LLM for commitment extraction + reset drafting</dd></div>
-        <div><dt>Output</dt><dd>Slack digest + scoped DMs per AE</dd></div>
-        <div><dt>Config</dt><dd>Severity weights in a table, Ops tunes without a deploy</dd></div>
+        <div><dt>Orchestrator:</dt><dd>n8n</dd></div>
+        <div><dt>Connectors:</dt><dd>Jira / Linear &middot; Gong / Salesforce &middot; CS tool</dd></div>
+        <div><dt>Model layer:</dt><dd>LLM for commitment extraction + reset drafting</dd></div>
+        <div><dt>Output:</dt><dd>Slack digest + scoped DMs per AE</dd></div>
+        <div><dt>Config:</dt><dd>Severity weights in a table, Ops tunes without a deploy</dd></div>
       </dl>
       <div class="cost">Build cost &mdash; <b>~2-3 eng-weeks + 1-2 Ops weeks</b></div>
     </div>
@@ -557,7 +556,7 @@
 </section>
 
 <footer>
-  Built as a follow-up to the Scribd Product Operations Lead final, 2026-05-14. Logic mirrors <code>run.py</code> from the mini-demo. One HTML file, vanilla JS, no dependencies &mdash; view source if you want to read it. &mdash; John Boyle
+  Built as a follow-up to the Scribd Product Operations Lead final, 2026-05-14. Logic mirrors the static document. One HTML file, vanilla JS, no dependencies. &mdash; John Boyle
 </footer>
 
 </div>
